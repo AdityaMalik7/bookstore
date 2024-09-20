@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { PostUpdateBook } from "../services/api";
 
-export default function PostForm({ onBookAdded }) {
+export default function PostForm({
+  onBookAdded,
+  activeBookId,
+  setActiveBookId,
+}) {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isbn, setIsbn] = useState("");
@@ -8,9 +13,27 @@ export default function PostForm({ onBookAdded }) {
   const [publishedDate, setPublishedDate] = useState("");
   const [responseMessage, setResponseMessage] = useState("");
 
+  function getBook(id) {
+    fetch(`http://localhost:3000/api/books/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setTitle(data.title);
+        setAuthor(data.author);
+
+        setIsbn(data.isbn);
+        setPrice(data.price);
+        setPublishedDate(data.publishedDate);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+  }
+
+  useEffect(() => {
+    if (!activeBookId) return;
+    getBook(activeBookId);
+  }, [activeBookId]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const postBook = {
       title,
       author,
@@ -19,13 +42,7 @@ export default function PostForm({ onBookAdded }) {
       publishedDate,
     };
 
-    fetch("http://localhost:3000/api/books", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(postBook),
-    })
+    PostUpdateBook(activeBookId, postBook)
       .then((response) => response.json())
       .then((data) => {
         setResponseMessage("Data successfully posted!");
@@ -38,6 +55,7 @@ export default function PostForm({ onBookAdded }) {
         if (onBookAdded) {
           onBookAdded();
         }
+        setActiveBookId("");
       })
       .catch((error) => {
         setResponseMessage("Error posting data");
@@ -47,7 +65,9 @@ export default function PostForm({ onBookAdded }) {
 
   return (
     <div className="max-w-lg mx-auto mt-8 p-8 bg-white shadow-md rounded">
-      <h1 className="text-2xl font-bold mb-6 text-center">Post Book!</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        {activeBookId ? "Update Book" : "Post Book"}
+      </h1>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
