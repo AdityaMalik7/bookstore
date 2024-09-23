@@ -14,7 +14,7 @@ function App() {
   }, []);
 
   function getBooks() {
-    fetch("http://localhost:3000/api/books")
+    fetch("http://ec2-18-222-170-221.us-east-2.compute.amazonaws.com/")
       .then((response) => response.json())
       .then((data) => setData(data))
       .catch((error) => console.error("Error fetching data:", error));
