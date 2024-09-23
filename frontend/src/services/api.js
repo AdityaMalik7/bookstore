@@ -1,5 +1,5 @@
 export async function fetchData(url, method = "GET", body = {}) {
-  return fetch(`http://localhost:3000/${url}`, {
+  return fetch(`http://localhost:3000${url}`, {
     method: method,
     headers: {
       "Content-Type": "application/json",
