@@ -1,5 +1,5 @@
 export async function fetchData(url, method = "GET", body = {}) {
-  return fetch(`http://ec2-18-222-170-221.us-east-2.compute.amazonaws.com/${url}`, {
+  return fetch(`http://ec2-18-222-170-221.us-east-2.compute.amazonaws.com${url}`, {
     method: method,
     headers: {
       "Content-Type": "application/json",
