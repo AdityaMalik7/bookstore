@@ -14,7 +14,7 @@ export default function PostForm({
   const [responseMessage, setResponseMessage] = useState("");
 
   function getBook(id) {
-    fetch(`http://localhost:3000/api/books/${id}`)
+    fetch(`http://ec2-18-222-170-221.us-east-2.compute.amazonaws.com${id}`)
       .then((response) => response.json())
       .then((data) => {
         setTitle(data.title);
